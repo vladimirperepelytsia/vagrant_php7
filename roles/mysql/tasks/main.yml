@@ -1,0 +1,26 @@
+---
+
+- name: start Mysql service
+  service: name=mysql state=started enabled=true
+  
+- name: Set root user password
+  become: yes
+  become_method: sudo
+  mysql_user:
+    name={{ root_login }}
+    host="{{ host }}"
+    password="{{ root_pass }}"
+    login_user="root"
+    check_implicit_admin=yes
+    priv=*.*:ALL
+    state=present
+  
+- name: create a new database
+  mysql_db:
+    login_user="{{ root_login }}"
+    login_password="{{ root_pass }}"
+    name={{ item.database }}
+    state=present
+    collation=utf8_general_ci
+  with_items: "{{ projects }}"
+  when: item.database is defined

@@ -1,0 +1,5 @@
+# vagrant
+.idea/
+.vagrant/
+.DS_Store
+config.yml

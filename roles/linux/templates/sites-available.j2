@@ -1,0 +1,14 @@
+{% for site in projects %}
+{% if site.webroot is defined %}
+<VirtualHost *:80>
+    ServerName {{ site.name }}
+    ServerAlias www.{{ site.name }}
+    DocumentRoot {{ site.webroot }}
+    <Directory {{ site.webroot }}>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride all
+        Require all granted
+    </Directory>
+</VirtualHost>
+{% endif %}
+{% endfor %}

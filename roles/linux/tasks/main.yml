@@ -1,0 +1,153 @@
+---
+
+- name: update apt cache
+  become: yes
+  become_method: sudo
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: upgrade to the latest packages
+  become: yes
+  become_method: sudo
+  apt: upgrade=dist
+  
+- name: install packages
+  become: yes
+  become_method: sudo
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - mc
+    - htop
+    - git
+    - mercurial
+    - apache2
+    - libapache2-mod-php
+    - mysql-server
+    - mysql-client
+    - python-mysqldb
+    - php-mysql
+    - php-intl
+    - libcurl3
+    - libcurl3-dev
+    - php-curl
+    - php-mcrypt
+    - php-mongodb
+    - phpmyadmin
+    - imagemagick
+    - dcraw
+    - libjpeg-progs
+    - nodejs
+    - npm
+    
+- name: Install npm global pack
+  become: yes
+  become_method: sudo
+  npm: name={{ item }} global=yes
+  with_items:
+    - gulp
+    - grunt-cli
+    - bower
+    
+- name: start Apache
+  become: yes
+  become_method: sudo
+  service: name=apache2 state=running enabled=yes
+  
+- name: enabled mod_rewrite
+  become: yes
+  become_method: sudo
+  apache2_module: name=rewrite state=present
+  
+- name: Change project directory permissions
+  become: yes
+  become_method: sudo
+  command: find /var/www -type d -exec chmod 0777 {} \;
+  
+- name: set Sites available
+  become: yes
+  become_method: sudo
+  template:
+    src: templates/sites-available.j2
+    dest: "/etc/apache2/sites-available/hosts.conf"
+    mode: 0644
+    owner: root
+    group: root
+
+- name: clone git projects
+  git: repo={{ item.git_repo }} dest={{ item.virtual_path }} accept_hostkey=yes update=no
+  with_items: "{{ projects }}"
+  when: item.git_repo is defined
+  
+- name: clone hg projects
+  hg: repo={{ item.hg_repo }} dest={{ item.virtual_path }} update=no
+  with_items: "{{ projects }}"
+  when: item.hg_repo is defined
+
+- name: phpmyadmin symlink
+  file: src=/usr/share/phpmyadmin dest=/var/www/html/phpmyadmin force=yes state=link mode=0755
+
+- name: nodejs symlink
+  become: yes
+  become_method: sudo
+  file: src=/usr/bin/nodejs dest=/usr/bin/node force=yes state=link
+
+- name: a2ensite hosts.conf
+  become: yes
+  become_method: sudo
+  command: a2ensite hosts.conf
+
+- name: restart apache
+  become: yes
+  become_method: sudo
+  service: name=apache2 state=restarted
+
+- name: Add mongo ppa key
+  become: yes
+  become_method: sudo
+  apt_key: >
+    keyserver=hkp://keyserver.ubuntu.com:80
+    id=EA312927
+    state=present
+
+- name: Add mongo sources list
+  become: yes
+  become_method: sudo
+  lineinfile: >
+    line="deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse"
+    dest=/etc/apt/sources.list.d/mongodb-org-3.2.list
+    state=present
+    create=yes
+
+- name: Install mongo
+  become: yes
+  become_method: sudo
+  apt: name=mongodb-org state=latest update_cache=yes
+
+- name: set mongodb service
+  become: yes
+  become_method: sudo
+  template:
+    src: templates/mongodb.service.j2
+    dest: "/etc/systemd/system/mongodb.service"
+    mode: 0644
+    owner: root
+    group: root
+
+- name: set mongodb config
+  become: yes
+  become_method: sudo
+  template:
+    src: templates/mongod.conf.j2
+    dest: "/etc/mongodb.conf"
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Start mongo
+  become: yes
+  become_method: sudo
+  command: systemctl start mongodb
+
+- name: Enable mongo
+  become: yes
+  become_method: sudo
+  command: systemctl enable mongodb
