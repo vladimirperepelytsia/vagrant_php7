@@ -10,7 +10,7 @@ id_rsa_path: "/path/to/id_rsa"
 
 #mysql credentials
 host: "localhost"
-root_login: "root"
+root_login: "ben"
 root_pass: "123456"
 old_pass: "123456"
 
