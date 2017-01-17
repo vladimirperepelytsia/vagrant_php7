@@ -137,7 +137,7 @@
   become_method: sudo
   template:
     src: templates/mongod.conf.j2
-    dest: "/etc/mongodb.conf"
+    dest: "/etc/mongod.conf"
     mode: 0644
     owner: root
     group: root
