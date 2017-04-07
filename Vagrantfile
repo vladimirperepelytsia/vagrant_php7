@@ -9,6 +9,8 @@ params = YAML.load_file("config.yml")
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = 'bento/ubuntu-16.04'
+
+  config.vm.network "forwarded_port", guest: params["forwarded_port_guest"], host: params["forwarded_port_host"]
   config.vm.network "private_network", ip: params["private_network"]
 
   # config.ssh.forward_agent = true
@@ -35,7 +37,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "2048"]
     vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
   end
-    
+
 
 
 
