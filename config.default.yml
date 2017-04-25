@@ -22,11 +22,11 @@ ssh_known_hosts:
 
 #projects data example, add to projects:
 #- {
-#     name: "test.local",
-#     local_path: "/Users/admin/projects/test.local",
-#     virtual_path: "/var/www/test.local",
-#     webroot: "/var/www/test.local",
-#     database: "test_local",
+#     name: "test.loc",
+#     local_path: "/Users/admin/projects/test.loc",
+#     virtual_path: "/var/www/test.loc",
+#     webroot: "/var/www/test.loc",
+#     database: "test_loc",
 #     git_repo: "git@github.com:admin/test.git" (or hg_repo)
 #   }
 projects:

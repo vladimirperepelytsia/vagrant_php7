@@ -21,6 +21,7 @@
     - mercurial
     - apache2
     - libapache2-mod-php
+    - apache2-utils
     - mysql-server
     - mysql-client
     - python-mysqldb
@@ -31,6 +32,7 @@
     - php-curl
     - php-mcrypt
     - php-mongodb
+    - php-soap
     - phpmyadmin
     - imagemagick
     - dcraw
@@ -42,6 +44,11 @@
   become: yes
   become_method: sudo
   shell: phpenmod mcrypt
+
+- name: enable apache proxy module
+  become: yes
+  become_method: sudo
+  shell: a2enmod proxy
 
 - name: Install npm global pack
   become: yes
