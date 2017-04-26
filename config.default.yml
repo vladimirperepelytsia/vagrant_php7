@@ -20,6 +20,9 @@ ssh_known_hosts:
   - github.com
   - bitbucket.org
 
+#packages settings
+node_version: "7.x"
+
 #projects data example, add to projects:
 #- {
 #     name: "test.loc",

@@ -10,6 +10,25 @@
   become_method: sudo
   apt: upgrade=dist
 
+- name: Remove old nodejs
+  become: yes
+  become_method: sudo
+  apt:
+    name: nodejs
+    state: absent
+
+- name: Download nodejs
+  get_url:
+      url: https://deb.nodesource.com/setup_{{node_version}}
+      dest: /tmp/nodesource_setup.sh
+      mode: 0777
+      force: yes
+
+- name: Setup nodejs
+  become: yes
+  become_method: sudo
+  shell: /tmp/nodesource_setup.sh
+
 - name: install packages
   become: yes
   become_method: sudo
@@ -38,7 +57,6 @@
     - dcraw
     - libjpeg-progs
     - nodejs
-    - npm
 
 - name: enable php mcrypt module
   become: yes
