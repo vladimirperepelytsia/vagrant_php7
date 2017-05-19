@@ -59,6 +59,7 @@
     - php-soap
     - phpmyadmin
     - imagemagick
+    - poppler-utils
     - dcraw
     - libjpeg-progs
     - nodejs
