@@ -19,7 +19,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     params["projects"].each do |project|
       localaliases << project["name"];
       Dir.mkdir(project["local_path"]) unless File.exists?(project["local_path"])
-      config.vm.synced_folder project["local_path"], project["virtual_path"], type: 'nfs'
+      config.vm.synced_folder project["local_path"], project["virtual_path"], type: 'nfs',
+        :nfs => true,
+        :mount_options => ['actimeo=2']
     end
   end
 

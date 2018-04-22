@@ -63,6 +63,7 @@
     - dcraw
     - libjpeg-progs
     - nodejs
+    - php-xdebug
 
 - name: enable php mcrypt module
   become: yes
