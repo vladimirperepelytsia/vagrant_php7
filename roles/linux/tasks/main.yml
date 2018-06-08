@@ -53,10 +53,13 @@
     - php-intl
     - libcurl3
     - libcurl3-dev
+    - zip
+    - unzip
     - php-curl
     - php-mcrypt
     - php-mongodb
     - php-soap
+    - php-zip
     - phpmyadmin
     - imagemagick
     - poppler-utils
@@ -92,7 +95,7 @@
 - name: start Apache
   become: yes
   become_method: sudo
-  service: name=apache2 state=running enabled=yes
+  service: name=apache2 state=started enabled=yes
 
 - name: enabled mod_rewrite
   become: yes
@@ -126,11 +129,6 @@
 
 - name: phpmyadmin symlink
   file: src=/usr/share/phpmyadmin dest=/var/www/html/phpmyadmin force=yes state=link mode=0755
-
-- name: nodejs symlink
-  become: yes
-  become_method: sudo
-  file: src=/usr/bin/nodejs dest=/usr/bin/node force=yes state=link
 
 - name: a2ensite hosts.conf
   become: yes
